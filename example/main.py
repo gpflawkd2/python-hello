@@ -20,10 +20,11 @@ def http_get(who):
     return who
 """
 
-# header에 데이터 전송 -> :(콜론) 사용
-# http -v POST localhost:8000/ who:hrpark
+# post, put, patch, delete 통신은 일반적으로 body에 데이터를 포함하여 전송하는 방식을 사용
 # body에 데이터 전송 -> =(등호) 사용
 # http -v POST localhost:8000/ who=hrpark
+# header에 데이터 전송 -> :(콜론) 사용
+# http -v POST localhost:8000/ who:hrpark
 @app.post("/")
 def http_post(who = Body(...)):
     return who
