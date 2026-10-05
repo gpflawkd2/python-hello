@@ -1,6 +1,7 @@
 from model.customer import Customer, CustomerUpdate
 import sqlite3
 from .init import conn, curs
+from error import Missing, Duplicate
 
 curs.execute("""
              CREATE TABLE IF NOT EXISTS customers (
@@ -36,10 +37,10 @@ def create_customer(new_customer: Customer) -> Customer:
     params = model_to_dict(new_customer)
     try:
         curs.execute(sql, params)
-        conn.commit()
     except sqlite3.IntegrityError:
-        conn.rollback()
-        raise ValueError(f"이미 존재하는 고객입니다: {new_customer.name}")
+        raise Duplicate(msg=f"customer {new_customer.name} is already exists")
+    
+    conn.commit()
     return get_customer(new_customer.name)
 
 # 특정 고객 조회
@@ -47,8 +48,10 @@ def get_customer(customer_name) -> Customer | None:
     sql = "SELECT * FROM customers WHERE name = :name"
     params = {"name": customer_name}
     curs.execute(sql, params)
-    row = curs.fetchone()
-    return row_to_model(row) if row else None
+    data = curs.fetchone()
+    if data:
+        return row_to_model(data)
+    raise Missing(f"customer {customer_name} not found")
 
 # 기존 고객 업데이트
 def modify_customer(customer_name: str, modified_customer: CustomerUpdate) -> Customer:
@@ -60,13 +63,18 @@ def modify_customer(customer_name: str, modified_customer: CustomerUpdate) -> Cu
     params = model_to_dict(modified_customer)
     params["customer_name"] = customer_name
     curs.execute(sql, params)
-    conn.commit()
-    return get_customer(customer_name)
-
+    if curs.rowcount == 1:
+        conn.commit()
+        return get_customer(customer_name)
+    else :
+        raise Missing(msg=f"customer {customer_name} not found")
+    
 # 고객 삭제
 def delete_customer(customer_name: str) -> None:
     sql = "DELETE FROM customers WHERE name = :name"
     params = {"name": customer_name}
     curs.execute(sql, params)
+    if curs.rowcount != 1:
+        raise Missing(msg=f"customer {customer_name} not found")
     conn.commit()
     return None
