@@ -42,4 +42,4 @@ def http_delete():
     return "delete로 접근했습니다."
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", reload=True, host="0.0.0.0", port=8000)
+    uvicorn.run("url_routing:app", reload=True, host="0.0.0.0", port=8000)
