@@ -6,6 +6,7 @@ import uvicorn
 from web import customer
 from web import market
 from web import user
+from web import html
 
 # app 실행
 app = FastAPI()
@@ -14,6 +15,7 @@ app = FastAPI()
 app.include_router(customer.router)
 app.include_router(market.router)
 app.include_router(user.router)
+app.include_router(html.router)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", reload=True, host="0.0.0.0", port=8000)

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"></meta>
+        <meta name="viewport" content="width=divice-width, initial-scale=1.0"></meta>
+        <title>고객관리 페이지</title>
+    </head>
+    <body>
+        <!--
+        <form method="post">
+            <fieldset>
+                <legend></legend>
+                <input type="text" name="name" placeholder="이름"/>
+                <input type="text" name="home" placeholder="주소"/>
+                <input type="text" name="call_num" placeholder="전화번호"/>
+                <input type="text" name="email" placeholder="이메일"/>
+                <input type="submit" />                
+            </fieldset>
+        </form>
+        -->
+        <br>
+        <br>
+        <table>
+            <tr>
+                <td>고객이름</td>
+                <td>주소</td>
+                <td>전화번호</td>
+                <td>이메일</td>
+            </tr>
+            {% for customer in customers %}
+                <tr>
+                    <td>{{customer.name}}</td>
+                    <td>{{customer.home}}</td>
+                    <td>{{customer.call_num}}</td>
+                    <td>{{customer.email}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </body>
+ </html>
